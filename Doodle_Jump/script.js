@@ -5,6 +5,8 @@ let charStartBottom = 100
 let isGameOver = false
 let pformNo = 5
 let platforms = []
+let upTimerId
+let downTimerId
 
 function createChar(){
     grid.appendChild(char)
@@ -51,6 +53,26 @@ function shiftPlatforms(){
     }
 }
 
+function jump(){
+    clearInterval(downTimerId)
+    upTimerId = setInterval(function() {
+        charStartBottom += 20
+        char.style.bottom = charStartBottom + 'px'
+        if (charStartBottom > 300){
+            fall()
+        }
+    }, 30)
+}
+
+function fall(){
+    clearInterval(upTimerId)
+    downTimerId = setInterval(function(){
+        charStartBottom -= 20
+        char.style.bottom = charStartBottom + 'px' 
+    } ,30)
+}
+    
+
 
 
 
@@ -59,6 +81,7 @@ function begin(){
         createChar()
         createPlatforms()
         setInterval(shiftPlatforms,30)
+        jump()
     }
 }
 
