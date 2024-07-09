@@ -7,6 +7,7 @@ let pformNo = 5
 let platforms = []
 let upTimerId
 let downTimerId
+let isJumping = false
 
 function createChar(){
     grid.appendChild(char)
@@ -56,6 +57,7 @@ function shiftPlatforms(){
 
 function jump(){
     clearInterval(downTimerId)
+    isJumping = true
     upTimerId = setInterval(function() {
         charStartBottom += 20
         char.style.bottom = charStartBottom + 'px'
@@ -67,12 +69,29 @@ function jump(){
 
 function fall(){
     clearInterval(upTimerId)
+    isJumping = false
     downTimerId = setInterval(function(){
         charStartBottom -= 20
         char.style.bottom = charStartBottom + 'px'
         if(charStartBottom <= 0 ) {
             gameEnd()
         } 
+
+        platforms.forEach(platform => {
+            if (
+                (charStartBottom >= platform.bottom) && 
+                (charStartBottom <= platform.bottom + 15) &&
+                ((charStartLeft + 50) >= platform.left) &&
+                (charStartLeft <= (platform.left + 85)) &&
+                isJumping === false
+           ) {
+            console.log("landed")
+            jump()
+           }
+
+        })
+
+        
     } ,30)
 }
 
@@ -81,6 +100,16 @@ function gameEnd(){
     isGameOver = true
     clearInterval(upTimerId)
     clearInterval(downTimerId)
+}
+
+function movement(){
+    if (e.key === "ArrowLeft"){
+        // move left
+    } else if (e.key === "ArrowRight"){
+        //move right
+    } else if (e.key === "ArrowUp"){
+        //move Up
+    }
 }
     
 
