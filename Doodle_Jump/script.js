@@ -54,6 +54,21 @@ function shiftPlatforms(){
             platform.bottom -= 4
             let visual = platform.visual
             visual.style.bottom = platform.bottom + 'px'
+
+            if (platform.bottom < 10){
+                let firstPform = platforms[0].visual
+                firstPform.style.display = "none"
+                platforms.shift()
+                console.log(platforms)
+                let newPlatform = new Pform(585)
+                platforms.push(newPlatform)
+
+            
+                
+
+               
+    
+            }
         })
             
         
@@ -69,7 +84,7 @@ function jump(){
         if (charStartBottom > startPoint + 200){
             fall()
         }
-    }, 30)
+    }, 20)
 }
 
 function fall(){
@@ -98,7 +113,7 @@ function fall(){
         })
 
         
-    } ,30)
+    } ,20)
 }
 
 function gameEnd(){
@@ -106,6 +121,8 @@ function gameEnd(){
     isGameOver = true
     clearInterval(upTimerId)
     clearInterval(downTimerId)
+    clearInterval(rightTimerId)
+    clearInterval(leftTimerId)
 }
 
 function movement(e){
