@@ -13,6 +13,7 @@ let isMovingLeft = false
 let isMovingRight = false
 let leftTimerId
 let rightTimerId
+let score = 0
 
 function createChar(){
     grid.appendChild(char)
@@ -59,6 +60,7 @@ function shiftPlatforms(){
                 let firstPform = platforms[0].visual
                 firstPform.style.display = "none"
                 platforms.shift()
+                score ++
                 console.log(platforms)
                 let newPlatform = new Pform(585)
                 platforms.push(newPlatform)
@@ -119,6 +121,10 @@ function fall(){
 function gameEnd(){
     console.log("game done")
     isGameOver = true
+    while(grid.firstChild) {
+        grid.removeChild(grid.firstChild)
+    }
+    grid.innerHTML = `You scored: ${score}`
     clearInterval(upTimerId)
     clearInterval(downTimerId)
     clearInterval(rightTimerId)
