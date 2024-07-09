@@ -11,7 +11,8 @@ let downTimerId
 function createChar(){
     grid.appendChild(char)
     char.classList.add("character")
-    char.style.left = charStartLeft + 'px'
+    charStartLeft = platforms[0].left
+    char.style.left = charStartLeft + 17.5 + 'px'
     char.style.bottom = charStartBottom + 'px'
     
 }
@@ -68,8 +69,18 @@ function fall(){
     clearInterval(upTimerId)
     downTimerId = setInterval(function(){
         charStartBottom -= 20
-        char.style.bottom = charStartBottom + 'px' 
+        char.style.bottom = charStartBottom + 'px'
+        if(charStartBottom <= 0 ) {
+            gameEnd()
+        } 
     } ,30)
+}
+
+function gameEnd(){
+    console.log("game done")
+    isGameOver = true
+    clearInterval(upTimerId)
+    clearInterval(downTimerId)
 }
     
 
@@ -78,8 +89,8 @@ function fall(){
 
 function begin(){
     if(isGameOver == false){
-        createChar()
         createPlatforms()
+        createChar()
         setInterval(shiftPlatforms,30)
         jump()
     }
