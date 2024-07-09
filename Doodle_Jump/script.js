@@ -1,7 +1,8 @@
 const grid = document.getElementById("grid")
 const char = document.createElement("div")
 let charStartLeft = 40
-let charStartBottom = 100
+let startPoint = 100
+let charStartBottom = startPoint
 let isGameOver = false
 let pformNo = 5
 let platforms = []
@@ -61,7 +62,7 @@ function jump(){
     upTimerId = setInterval(function() {
         charStartBottom += 20
         char.style.bottom = charStartBottom + 'px'
-        if (charStartBottom > 300){
+        if (charStartBottom > startPoint + 200){
             fall()
         }
     }, 30)
@@ -86,6 +87,7 @@ function fall(){
                 isJumping === false
            ) {
             console.log("landed")
+            startPoint = charStartBottom
             jump()
            }
 
