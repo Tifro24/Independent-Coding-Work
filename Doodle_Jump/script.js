@@ -9,6 +9,10 @@ let platforms = []
 let upTimerId
 let downTimerId
 let isJumping = false
+let isMovingLeft = false
+let isMovingRight = false
+let leftTimerId
+let rightTimerId
 
 function createChar(){
     grid.appendChild(char)
@@ -104,15 +108,56 @@ function gameEnd(){
     clearInterval(downTimerId)
 }
 
-function movement(){
+function movement(e){
     if (e.key === "ArrowLeft"){
-        // move left
+        shiftLeft()
     } else if (e.key === "ArrowRight"){
-        //move right
+        shiftRight()
     } else if (e.key === "ArrowUp"){
-        //move Up
+        shiftUp()
     }
 }
+
+function shiftLeft(){
+    
+    if(isMovingRight) {
+        clearInterval(leftTimerId)
+        isMovingLeft = false
+    }
+    leftTimerId = setInterval(function (){
+        if (charStartLeft >= 0) {
+            charStartLeft -= 5
+            char.style.left = charStartLeft + 'px'
+        } else shiftRight()
+
+    } ,30)
+
+}
+
+function shiftRight(){
+   
+    if(isMovingLeft){
+        clearInterval(leftTimerId)
+        isMovingRight = False 
+    }
+    rightTimerId = setInterval(function (){
+        if (charStartLeft <= 350) {
+            charStartLeft += 5
+            char.style.left = charStartLeft + 'px'
+        } else shiftLeft()
+
+    } ,30)
+
+}
+
+function shiftUp(){
+    isMovingLeft = false
+    isMovingRight = false
+    clearInterval(rightTimerId)
+    clearInterval(leftTimerId)
+}
+
+
     
 
 
@@ -124,6 +169,7 @@ function begin(){
         createChar()
         setInterval(shiftPlatforms,30)
         jump()
+        document.addEventListener("keyup", movement)
     }
 }
 
