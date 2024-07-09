@@ -31,7 +31,7 @@ class Pform {
 function createPlatforms(){
     for(let i=0; i<pformNo; i++){
         let pGap = 600 / pformNo
-        let newPFormBottom = 100 + i * pGap
+        let newPFormBottom = 75 + i * pGap
         let newPform = new Pform(newPFormBottom)
         platforms.push(newPform)
         
@@ -39,10 +39,26 @@ function createPlatforms(){
     }
 }
 
+function shiftPlatforms(){
+    if(charStartBottom > 200) {
+        platforms.forEach(platform => {
+            platform.bottom -= 4
+            let visual = platform.visual
+            visual.style.bottom = platform.bottom + 'px'
+        })
+            
+        
+    }
+}
+
+
+
+
 function begin(){
     if(isGameOver == false){
         createChar()
         createPlatforms()
+        setInterval(shiftPlatforms,30)
     }
 }
 
