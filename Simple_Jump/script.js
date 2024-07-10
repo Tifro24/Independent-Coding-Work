@@ -18,7 +18,7 @@ function createChar() {
 class PlatClass {
     constructor(newPlatBottom){
         this.bottom = newPlatBottom - 100
-        this.left = Math.random() * 1100
+        this.left = Math.random() * 1050
         this.platReal = document.createElement("div")
 
 
@@ -37,6 +37,17 @@ function createPlatforms(){
         let newPlatBottom = 150 + i *  platGap
         let newPlatform = new PlatClass(newPlatBottom)
         platforms.push(newPlatform)
+        console.log(platforms)
+    }
+}
+
+function movingPlatforms(){
+    if (charStartBottom > 0){
+        platforms.forEach(platform => {
+            platform.left -= 4
+            let platReal = platform.platReal
+            platReal.style.left = platform.left + 'px'
+        })
     }
 }
 
@@ -57,6 +68,7 @@ function begin(){
     if (isGameOver == false){
         createPlatforms()
         createChar()
+        setInterval(movingPlatforms, 30)
     }
 }
 
