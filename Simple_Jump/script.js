@@ -6,6 +6,35 @@ isGameOver = false
 platformNo = 5
 platforms = []
 
+let controls = {
+    left:false,
+    right:false,
+    up:false,
+    keyListener: function(event){
+        let control_state = (event.type == "keydown")?true:false;
+
+        switch(event.keyCode){
+            case 37:
+                controls.left = control_state;
+                console.log("left arrow pressed")
+            break;
+            case 38:
+                controls.up = control_state;
+                console.log("up arrow pressed")
+            break;
+            case 39:
+                controls.right = control_state;
+                console.log("right arrow pressed")
+            break
+        }
+    }
+    
+
+
+}
+
+
+
 
 function createChar() {
     box.appendChild(char)
@@ -37,12 +66,11 @@ function createPlatforms(){
         let newPlatBottom = 150 + i *  platGap
         let newPlatform = new PlatClass(newPlatBottom)
         platforms.push(newPlatform)
-        console.log(platforms)
     }
 }
 
 function movingPlatforms(){
-    if (charStartBottom > 0){
+    if (charStartBottom > 200){
         platforms.forEach(platform => {
             platform.left -= 4
             let platReal = platform.platReal
@@ -64,6 +92,8 @@ function movingPlatforms(){
 
 
 
+
+
 function begin(){
     if (isGameOver == false){
         createPlatforms()
@@ -71,5 +101,7 @@ function begin(){
         setInterval(movingPlatforms, 30)
     }
 }
+window.addEventListener("keydown", controls.keyListener)
+window.addEventListener("keyup", controls.keyListener)
 
 begin()
