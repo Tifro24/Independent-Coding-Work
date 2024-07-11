@@ -11,14 +11,18 @@ let charWidth = 48
 let charHeight = 68
 let charX = gridWidth/16
 let charY = gridHeight/4
-let charImg;
-let charLeftImg
+let charRightImg;
+let charLeftImg;
+
+//physics
+let velocityX = 0
 
 let char = {
     x : charX,
     y : charY,
     width : charWidth,
-    height : charHeight
+    height : charHeight,
+    img : null
 }
 
 //platforms
@@ -41,14 +45,13 @@ context = grid.getContext("2d")
 
 //drawing character
 
-context.fillStyle = "orange";
-context.fillRect(char.x, char.y, charWidth, charHeight)
 
 
-charImg = new Image();
-charImg.src = "/Media/images/mariorightpng.png"
-charImg.onload = function(){
-context.drawImage(charImg, char.x, char.y, char.width, char.height)
+charRightImg = new Image();
+charRightImg.src = "/Media/images/mariorightpng.png"
+char.img = charRightImg
+charRightImg.onload = function(){
+    context.drawImage(charRightImg, char.x, char.y, char.width, char.height)
 }
 
 charLeftImg = new Image();
@@ -57,22 +60,43 @@ charLeftImg.src = "/Media/images/marioleftpng.png";
 
 
 
+
 platformImg = new Image();
 platformImg.src = "/Media/images/ruler.png"
 
-
+placePlatforms();
+requestAnimationFrame(update);
+document.addEventListener("keydown", moveCharacter)
 }
 
 
-placePlatforms();
-requestAnimationFrame(update);
+function moveCharacter(e){
+    if (e.code == "ArrowRight" || e.code == "KeyD"){
+        velocityX = 4;
+        char.img = charRightImg;
+        
+    }
+
+    else if (e.code == "ArrowLeft" || e.code === "KeyA"){
+        velocityX = -4;
+        char.img = charLeftImg;
+        
+    }
+    
+}
+
+
+
+
+
 
 function update(){
     requestAnimationFrame(update);
     context.clearRect(0, 0, grid.width, grid.height);
 
     //character
-    context.drawImage(charImg, char.x, char.y, char.width, char.height);
+    char.x += velocityX
+    context.drawImage(char.img, char.x, char.y, char.width, char.height);
 
     //platforms
 
@@ -83,6 +107,8 @@ function update(){
     }
 
 }
+
+
 
 function placePlatforms(){
     platArr = [];
