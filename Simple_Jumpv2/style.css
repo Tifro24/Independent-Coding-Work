@@ -5,4 +5,6 @@ body {
 
 #grid {
     background-color: aquamarine;
+    /* input appropriate bg image*/
+    background-image: url(/Media/images/paper\ mario\ background.jpg);
 }
