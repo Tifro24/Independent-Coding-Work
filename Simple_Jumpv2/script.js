@@ -17,6 +17,7 @@ let charLeftImg;
 //physics
 let velocityX = 0
 let velocityY = 0
+let initialVelocityX = -5
 
 let char = {
     x : charX,
@@ -33,8 +34,8 @@ let char = {
 //platforms
 
 let platArr = []
-let platWidth = 96
-let platHeight = 20
+let platWidth = 150
+let platHeight = 60
 let platformImg;
 
 window.onload =function(){
@@ -67,7 +68,7 @@ charLeftImg.src = "/Media/images/marioleftpng.png";
 
 
 platformImg = new Image();
-platformImg.src = "/Media/images/ruler.png"
+platformImg.src = "/Media/images/8bitplatform.png"
 
 placePlatforms();
 requestAnimationFrame(update);
@@ -151,9 +152,26 @@ function update(){
 
     for(let i = 0; i<platArr.length; i++){
         let platform = platArr[i]
-        context.fillStyle = "green";
-        context.fillRect(platform.x, platform.y, platform.width, platform.height)
+            platform.x += initialVelocityX
+        
+
+        if (detectCollsion(char, platform) && velocityY >= 0){
+            char.y = platform.y - char.height
+            char.velocityY = 0
+            char.jumping = false
+        }
+        context.drawImage(platformImg, platform.x, platform.y, platform.width, platform.height)
     }
+
+    //clear platforms and add new platforms
+
+    while (platArr.length > 0 && platArr[0].x + platArr[0].width < 0){
+        platArr.shift();
+        console.log(platArr)
+        newPlatform();
+    }
+
+
 
 }
 
@@ -165,22 +183,57 @@ function placePlatforms(){
     //starting platform
 
     let platform = {
-        // img: platformImg
-        x : gridWidth - 300,
-        y : gridHeight/2,
+         img: platformImg,
+        x : char.x - 50,
+        y : char.y,
         width : platWidth,
         height : platHeight
     }
 
     platArr.push(platform);
 
-    platform = {
-        // img: platformImg
-        x : gridWidth - 600,
-        y : gridHeight/2,
+    // platform = {
+    //      img: platformImg,
+    //     x : gridWidth - 650,
+    //     y : gridHeight - 100,
+    //     width : platWidth,
+    //     height : platHeight
+    // }
+    // platArr.push(platform);
+
+    for (let i=0; i<6; i++){
+        let randomY = Math.floor(Math.random() * gridHeight) 
+        let platform = {
+        img: platformImg,
+        x : 0 + 190*i + 150,
+        y : randomY,
         width : platWidth,
         height : platHeight
+       }
+   
+       platArr.push(platform);
     }
-
-    platArr.push(platform);
 }
+
+
+function newPlatform(){
+    let randomY = Math.floor(Math.random() * gridHeight) 
+        let platform = {
+        img: platformImg,
+        x : gridWidth,
+        y : randomY,
+        width : platWidth,
+        height : platHeight
+       }
+   
+       platArr.push(platform);
+      
+}
+
+
+function detectCollsion(a,b) {
+   return   a.x < b.x + b.width && 
+            a.x + a.width > b.x &&
+            a.y < b.y + b.height &&
+            a.y + a.height > b.y;
+ }
