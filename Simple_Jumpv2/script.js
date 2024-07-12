@@ -14,11 +14,6 @@ let charY = gridHeight/4
 let charRightImg;
 let charLeftImg;
 
-//physics
-let velocityX = 0
-let velocityY = 0
-let initialVelocityX = -5
-
 let char = {
     x : charX,
     y : charY,
@@ -31,12 +26,22 @@ let char = {
     jumping: true
 }
 
+//physics
+let velocityX = 0
+let velocityY = 0
+let initialVelocityX = -5
+
+
+
 //platforms
 
 let platArr = []
-let platWidth = 150
-let platHeight = 60
+let platWidth = 150;
+let platHeight = 60;
 let platformImg;
+
+let score = 0;
+let gameOver = false;
 
 window.onload =function(){
 
@@ -62,6 +67,7 @@ charRightImg.onload = function(){
 
 charLeftImg = new Image();
 charLeftImg.src = "/Media/images/marioleftpng.png";
+
 
 
 
@@ -94,6 +100,26 @@ function moveCharacter(e){
         char.velocityY -= 30;
         char.jumping = true
     }
+
+    if (e.code == "Space" && gameOver){
+         char = {
+            x : charX,
+            y : charY,
+            width : charWidth,
+            height : charHeight,
+            img : charRightImg,
+            velocityLX : 0,
+            velocityRX : 0,
+            velocityY : 0,
+            jumping: true
+        }
+        
+     
+
+        score = 0;
+        gameOver = false
+        placePlatforms();
+    }
 }
 
 function noMoveCharacter(e){
@@ -113,7 +139,14 @@ function noMoveCharacter(e){
         char.velocityY -= 0;
         char.jumping = true
     }
+
+    if (e.code == "Space" && gameOver){
+        ///reset
+
+
+    }
 }
+
 
 
 
@@ -122,6 +155,12 @@ function noMoveCharacter(e){
 
 function update(){
     requestAnimationFrame(update);
+    if(gameOver){
+        context.fillStyle = "black"
+        context.font = "25px sans-serif"
+        context.fillText(`You Scored ${score}! Press 'Space' to Reset`, gridWidth/3 +10, gridHeight*7/8);
+        return;
+    }
     context.clearRect(0, 0, grid.width, grid.height);
 
     //character
@@ -139,10 +178,11 @@ function update(){
         char.x = 0
     }
 
-    if (char.y > grid.height - char.height - 10 ){
-        char.jumping = false;
-        char.y = gridHeight - charHeight
+    if (char.y > grid.height){
+        char.jumping = true;
+        char.y = grid.height
         char.velocityY = 0
+        gameOver = true
     }
 
 
@@ -170,6 +210,14 @@ function update(){
         console.log(platArr)
         newPlatform();
     }
+
+    //score
+    updateScore();
+    context.fillStyle = "black"
+    context.font = "16px sans-serif"
+    context.fillText(score, 5,20);
+
+    
 
 
 
@@ -237,3 +285,10 @@ function detectCollsion(a,b) {
             a.y < b.y + b.height &&
             a.y + a.height > b.y;
  }
+
+ function updateScore(){
+    let points = Math.floor(50*Math.random())
+    score += points
+ }
+
+ 
