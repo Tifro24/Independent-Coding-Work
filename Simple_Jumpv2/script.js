@@ -14,6 +14,7 @@ let charY = gridHeight/4
 let charRightImg;
 let charLeftImg;
 
+
 let char = {
     x : charX,
     y : charY,
@@ -23,13 +24,14 @@ let char = {
     velocityLX : 0,
     velocityRX : 0,
     velocityY : 0,
-    jumping: true
+    jumping: true,
 }
 
 //physics
 let velocityX = 0
 let velocityY = 0
 let initialVelocityX = -5
+
 
 
 
@@ -49,6 +51,9 @@ grid = document.getElementById("grid")
 grid.width = gridWidth
 grid.height = gridHeight
 context = grid.getContext("2d")
+
+let bgSound = document.getElementById("bgSound")
+bgSound.play()
 
 
 
@@ -99,6 +104,11 @@ function moveCharacter(e){
     if (e.code == "ArrowUp" && char.jumping == false || e.code == "KeyW" && char.jumping == false){
         char.velocityY -= 30;
         char.jumping = true
+        let sound = document.getElementById("Sound")
+        sound.volume = 0.1
+        sound.load()
+        sound.play()
+        
     }
 
     if (e.code == "Space" && gameOver){
@@ -111,13 +121,17 @@ function moveCharacter(e){
             velocityLX : 0,
             velocityRX : 0,
             velocityY : 0,
-            jumping: true
+            jumping: true,
         }
         
+        deathSound.pause()
+        deathSound.currentTime = 0
      
 
         score = 0;
         gameOver = false
+        bgSound.load()
+        bgSound.play()
         placePlatforms();
     }
 }
@@ -138,17 +152,9 @@ function noMoveCharacter(e){
     if (e.code == "ArrowUp" && char.jumping == false || e.code == "KeyW" && char.jumping == false){
         char.velocityY -= 0;
         char.jumping = true
-    }
-
-    if (e.code == "Space" && gameOver){
-        ///reset
-
-
+        
     }
 }
-
-
-
 
 
 
@@ -159,6 +165,8 @@ function update(){
         context.fillStyle = "black"
         context.font = "25px sans-serif"
         context.fillText(`You Scored ${score}! Press 'Space' to Reset`, gridWidth/3 +10, gridHeight*7/8);
+        bgSound.pause()
+        bgSound.currentTime = 0
         return;
     }
     context.clearRect(0, 0, grid.width, grid.height);
@@ -182,6 +190,8 @@ function update(){
         char.jumping = true;
         char.y = grid.height
         char.velocityY = 0
+        let deathSound = document.getElementById("deathSound")
+        deathSound.play()
         gameOver = true
     }
 
@@ -214,8 +224,8 @@ function update(){
     //score
     updateScore();
     context.fillStyle = "black"
-    context.font = "16px sans-serif"
-    context.fillText(score, 5,20);
+    context.font = "25px sans-serif"
+    context.fillText(score, 5,25);
 
     
 
