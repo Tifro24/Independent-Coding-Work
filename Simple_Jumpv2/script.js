@@ -16,13 +16,18 @@ let charLeftImg;
 
 //physics
 let velocityX = 0
+let velocityY = 0
 
 let char = {
     x : charX,
     y : charY,
     width : charWidth,
     height : charHeight,
-    img : null
+    img : null,
+    velocityLX : 0,
+    velocityRX : 0,
+    velocityY : 0,
+    jumping: true
 }
 
 //platforms
@@ -67,22 +72,46 @@ platformImg.src = "/Media/images/ruler.png"
 placePlatforms();
 requestAnimationFrame(update);
 document.addEventListener("keydown", moveCharacter)
+document.addEventListener("keyup", noMoveCharacter)
 }
 
 
 function moveCharacter(e){
     if (e.code == "ArrowRight" || e.code == "KeyD"){
-        velocityX = 4;
+        char.velocityRX = 7;
         char.img = charRightImg;
         
     }
 
-    else if (e.code == "ArrowLeft" || e.code === "KeyA"){
-        velocityX = -4;
+    else if (e.code == "ArrowLeft" || e.code == "KeyA"){
+        char.velocityLX = -7;
         char.img = charLeftImg;
         
     }
-    
+
+    if (e.code == "ArrowUp" && char.jumping == false || e.code == "KeyW" && char.jumping == false){
+        char.velocityY -= 30;
+        char.jumping = true
+    }
+}
+
+function noMoveCharacter(e){
+    if (e.code == "ArrowRight" || e.code == "KeyD"){
+        char.velocityRX  = 0;
+        char.img = charRightImg;
+        
+    }
+
+    else if (e.code == "ArrowLeft" || e.code == "KeyA"){
+        char.velocityLX = 0;
+        char.img = charLeftImg;
+        
+    }
+
+    if (e.code == "ArrowUp" && char.jumping == false || e.code == "KeyW" && char.jumping == false){
+        char.velocityY -= 0;
+        char.jumping = true
+    }
 }
 
 
@@ -95,7 +124,27 @@ function update(){
     context.clearRect(0, 0, grid.width, grid.height);
 
     //character
-    char.x += velocityX
+    char.x += char.velocityLX
+    char.x += char.velocityRX
+    char.velocityY += 1.5;
+    char.y += char.velocityY
+    if (char.x > gridWidth - char.width){
+        velocityX = 0
+        char.x = gridWidth - char.width
+    }
+
+    if (char.x < 0){
+        velocityX = 0
+        char.x = 0
+    }
+
+    if (char.y > grid.height - char.height - 10 ){
+        char.jumping = false;
+        char.y = gridHeight - charHeight
+        char.velocityY = 0
+    }
+
+
     context.drawImage(char.img, char.x, char.y, char.width, char.height);
 
     //platforms
